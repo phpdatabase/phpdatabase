@@ -3,14 +3,17 @@
 namespace PhpDatabaseMySQL;
 
 use PhpDatabaseMySQL\Authentication\Connection\MySQLConnection;
+use PhpDatabaseMySQL\Controller\Service\InfoFactory;
 use PhpDatabaseMySQL\Controller\Service\SchemaFactory;
 use PhpDatabaseMySQL\Controller\Service\TableFactory;
+use PhpDatabaseMySQL\TaskService\Service\InfoFactory as InfoFactoryTaskService;
 use PhpDatabaseMySQL\TaskService\Service\SchemaFactory as SchemaFactoryTaskService;
 use PhpDatabaseMySQL\TaskService\Service\TableFactory as TableFactoryTaskService;
 
 return [
     'controllers' => [
         'factories' => [
+            'mysql-info' => InfoFactory::class,
             'mysql-schema' => SchemaFactory::class,
             'mysql-table' => TableFactory::class,
         ],
@@ -28,6 +31,36 @@ return [
                     'route' => '/mysql',
                 ],
                 'child_routes' => [
+                    'character-sets' => [
+                        'type' => 'Zend\\Mvc\\Router\\Http\\Literal',
+                        'options' => [
+                            'route' => '/character-sets',
+                            'defaults' => [
+                                'controller' => 'mysql-info',
+                                'action' => 'character-sets',
+                            ],
+                        ],
+                    ],
+                    'collations' => [
+                        'type' => 'Zend\\Mvc\\Router\\Http\\Literal',
+                        'options' => [
+                            'route' => '/collations',
+                            'defaults' => [
+                                'controller' => 'mysql-info',
+                                'action' => 'collations',
+                            ],
+                        ],
+                    ],
+                    'engines' => [
+                        'type' => 'Zend\\Mvc\\Router\\Http\\Literal',
+                        'options' => [
+                            'route' => '/engines',
+                            'defaults' => [
+                                'controller' => 'mysql-info',
+                                'action' => 'engines',
+                            ],
+                        ],
+                    ],
                     'schema' => [
                         'type' => 'Zend\\Mvc\\Router\\Http\\Segment',
                         'options' => [
@@ -94,6 +127,7 @@ return [
     ],
     'service_manager' => [
         'factories' => [
+            'mysql.taskservice.info' => InfoFactoryTaskService::class,
             'mysql.taskservice.schema' => SchemaFactoryTaskService::class,
             'mysql.taskservice.table' => TableFactoryTaskService::class,
         ],

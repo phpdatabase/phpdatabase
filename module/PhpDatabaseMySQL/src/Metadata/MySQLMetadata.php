@@ -80,7 +80,7 @@ class MySQLMetadata implements RelationalMetadataInterface
             $characterSetObject = new CharacterSetObject($data['CHARACTER_SET_NAME']);
             $characterSetObject->setDefaultCollationName($data['DEFAULT_COLLATE_NAME']);
             $characterSetObject->setDescription($data['DESCRIPTION']);
-            $characterSetObject->setMaximumLength($data['MAXLEN']);
+            $characterSetObject->setMaximumLength((int)$data['MAXLEN']);
 
             $result[] = $characterSetObject;
         }
@@ -97,10 +97,10 @@ class MySQLMetadata implements RelationalMetadataInterface
         foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $data) {
             $collationObject = new CollationObject($data['COLLATION_NAME']);
             $collationObject->setCharacterSetName($data['CHARACTER_SET_NAME']);
-            $collationObject->setId($data['ID']);
-            $collationObject->setIsDefault($data['IS_DEFAULT']);
-            $collationObject->setIsCompiled($data['IS_COMPILED']);
-            $collationObject->setSortLength($data['SORTLEN']);
+            $collationObject->setId((int)$data['ID']);
+            $collationObject->setIsDefault($data['IS_DEFAULT'] === 'Yes');
+            $collationObject->setIsCompiled($data['IS_COMPILED'] === 'Yes');
+            $collationObject->setSortLength((int)$data['SORTLEN']);
 
             $result[] = $collationObject;
         }
