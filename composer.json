@@ -1,0 +1,22 @@
+{
+    "name": "phpdatabase/phpdatabase",
+    "type": "project",
+    "description": "This application manages databases and users.",
+    "license": "MIT",
+    "require": {
+        "php": ">=5.5.0",
+        "zendframework/zend-developer-tools": "^0.0.2",
+        "zendframework/zendframework": "^2.5",
+        "zfcampus/zf-development-mode": "^2.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "PhpDatabaseApplication\\": "module/PhpDatabaseApplication/src",
+            "PhpDatabaseMongoDB\\": "module/PhpDatabaseMongoDB/src",
+            "PhpDatabaseMySQL\\": "module/PhpDatabaseMySQL/src",
+            "PhpDatabasePostgreSQL\\": "module/PhpDatabasePostgreSQL/src",
+            "PhpDatabaseSchema\\": "module/PhpDatabaseSchema/src",
+            "PhpDatabaseSQLite\\": "module/PhpDatabaseSQLite/src"
+        }
+    }
+}

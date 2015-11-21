@@ -1,0 +1,23 @@
+<?php
+
+$this->headMeta()->appendHttpEquiv('X-UA-Compatible', 'IE=edge,chrome=1');
+$this->headMeta()->appendName('viewport', 'width=device-width, initial-scale=1.0');
+
+?>
+<?php echo $this->docType(); ?>
+<html dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <?php echo $this->headMeta(); ?>
+
+        <?php echo $this->headTitle('applicationTitle')->setSeparator(' - '); ?>
+
+        <?php echo $this->headStyle(); ?>
+        <base href="<?php echo $this->basePath('/'); ?>">
+    </head>
+    <body>
+
+        <?php echo $this->content; ?>
+
+    </body>
+</html>

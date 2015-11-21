@@ -1,0 +1,70 @@
+<?php
+
+$this->headTitle('errorPageTitle500');
+
+$this->layout('layout/error');
+
+?>
+
+<h1><?php echo $this->translate('errorPageTitle500') ?></h1>
+<h2><?php echo $this->message ?></h2>
+
+<?php if (isset($this->display_exceptions) && $this->display_exceptions): ?>
+
+<?php if(isset($this->exception) && $this->exception instanceof Exception): ?>
+<hr/>
+<h2><?php echo $this->translate('errorExceptionAdditionalInformation') ?>:</h2>
+<h3><?php echo get_class($this->exception); ?></h3>
+<dl>
+    <dt><?php echo $this->translate('errorExceptionFile') ?>:</dt>
+    <dd>
+        <pre class="prettyprint linenums"><?php echo $this->exception->getFile() ?>:<?php echo $this->exception->getLine() ?></pre>
+    </dd>
+    <dt><?php echo $this->translate('errorExceptionMessage') ?>:</dt>
+    <dd>
+        <pre class="prettyprint linenums"><?php echo $this->escapeHtml($this->exception->getMessage()) ?></pre>
+    </dd>
+    <dt><?php echo $this->translate('errorExceptionStackTrace') ?>:</dt>
+    <dd>
+        <pre class="prettyprint linenums"><?php echo $this->escapeHtml($this->exception->getTraceAsString()) ?></pre>
+    </dd>
+</dl>
+<?php
+    $e = $this->exception->getPrevious();
+    if ($e) :
+?>
+<hr/>
+<h2><?php echo $this->translate('errorExceptionPreviousExceptions') ?>:</h2>
+<ul class="unstyled">
+    <?php while($e) : ?>
+    <li>
+        <h3><?php echo get_class($e); ?></h3>
+        <dl>
+            <dt><?php echo $this->translate('errorExceptionFile') ?>:</dt>
+            <dd>
+                <pre class="prettyprint linenums"><?php echo $e->getFile() ?>:<?php echo $e->getLine() ?></pre>
+            </dd>
+            <dt><?php echo $this->translate('errorExceptionMessage') ?>:</dt>
+            <dd>
+                <pre class="prettyprint linenums"><?php echo $this->escapeHtml($e->getMessage()) ?></pre>
+            </dd>
+            <dt><?php echo $this->translate('errorExceptionStackTrace') ?>:</dt>
+            <dd>
+                <pre class="prettyprint linenums"><?php echo $this->escapeHtml($e->getTraceAsString()) ?></pre>
+            </dd>
+        </dl>
+    </li>
+    <?php
+        $e = $e->getPrevious();
+        endwhile;
+    ?>
+</ul>
+<?php endif; ?>
+
+<?php else: ?>
+
+<h3><?php echo $this->translate('errorExceptionNoneAvailable') ?></h3>
+
+<?php endif ?>
+
+<?php endif ?>
