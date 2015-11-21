@@ -2,27 +2,27 @@
 
 namespace PhpDatabaseMySQL\TaskService;
 
-use PhpDatabaseMySQL\Authentication\Connection\MySQLConnection;
-use PhpDatabaseMySQL\Metadata\MySQLMetadata;
+use PDO;
 use PhpDatabaseSchema\Metadata\Relational\Object\SchemaObject;
 use PhpDatabaseSchema\Metadata\Relational\Object\TableObject;
+use PhpDatabaseSchema\Metadata\Relational\RelationalMetadataInterface;
 
 class Table
 {
     /**
-     * @var MySQLConnection
+     * @var PDO
      */
     private $connection;
 
     /**
-     * @var MySQLMetadata
+     * @var RelationalMetadataInterface
      */
     private $metaData;
 
-    public function __construct(MySQLConnection $connection)
+    public function __construct(PDO $connection, RelationalMetadataInterface $metaData)
     {
         $this->connection = $connection;
-        $this->metaData = $connection->getMetaData();
+        $this->metaData = $metaData;
     }
 
     public function dropTable($tableName, $schemaName)

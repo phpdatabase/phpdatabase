@@ -2,7 +2,7 @@
 <phpunit bootstrap="tests/bootstrap.php" backupGlobals="false" colors="true">
     <testsuites>
         <testsuite name="phpdatabase/phpdatabase">
-            <directory>module/</directory>
+            <directory>module/PhpDatabaseMySQL/tests/</directory>
         </testsuite>
     </testsuites>
 
@@ -13,7 +13,9 @@
 
     <filter>
         <whitelist>
-            <directory suffix=".php">module/</directory>
+            <directory suffix=".php">module/PhpDatabaseApplication/src/</directory>
+            <directory suffix=".php">module/PhpDatabaseMySQL/src/</directory>
         </whitelist>
+
     </filter>
 </phpunit>

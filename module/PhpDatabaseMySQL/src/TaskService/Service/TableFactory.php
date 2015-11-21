@@ -12,6 +12,9 @@ class TableFactory implements FactoryInterface
     {
         $authenticationService = $serviceLocator->get('application.authentication.service');
 
-        return new Table($authenticationService->getConnection());
+        $connection = $authenticationService->getConnection();
+        $metaData = $connection->getMetadata();
+
+        return new Table($connection, $metaData);
     }
 }

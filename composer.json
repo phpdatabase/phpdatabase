@@ -21,5 +21,15 @@
             "PhpDatabaseSchema\\": "module/PhpDatabaseSchema/src",
             "PhpDatabaseSQLite\\": "module/PhpDatabaseSQLite/src"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PhpDatabaseApplicationTest\\": "module/PhpDatabaseApplication/tests",
+            "PhpDatabaseMongoDBTest\\": "module/PhpDatabaseMongoDB/tests",
+            "PhpDatabaseMySQLTest\\": "module/PhpDatabaseMySQL/tests",
+            "PhpDatabasePostgreSQLTest\\": "module/PhpDatabasePostgreSQL/tests",
+            "PhpDatabaseSchemaTest\\": "module/PhpDatabaseSchema/tests",
+            "PhpDatabaseSQLiteTest\\": "module/PhpDatabaseSQLite/tests"
+        }
     }
 }
