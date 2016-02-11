@@ -2,15 +2,17 @@
 
 namespace PhpDatabaseMongoDB\Authentication\Connection;
 
-use MongoClient;
+use MongoDB\Driver\Command;
+use MongoDB\Driver\Manager;
 use PhpDatabaseApplication\Authentication\Connection\ConnectionInterface;
 use PhpDatabaseMongoDB\Metadata\MongoDBMetadata;
 use PhpDatabaseSchema\Metadata\MetadataInterface;
 
-class MongoDBConnection extends MongoClient implements ConnectionInterface
+class MongoDBConnection implements ConnectionInterface
 {
     private $options;
     private $dsn;
+    private $manager;
     private $metaData;
 
     public function __construct(array $options)
@@ -23,7 +25,7 @@ class MongoDBConnection extends MongoClient implements ConnectionInterface
         }
         $this->dsn .= sprintf('%s:%d', $this->options['hostname'], $this->options['port']);
 
-        parent::__construct($this->dsn, []);
+        $this->manager = new Manager($this->dsn);
     }
 
     /**
@@ -40,11 +42,18 @@ class MongoDBConnection extends MongoClient implements ConnectionInterface
         return $this->metaData;
     }
 
+    public function getManager()
+    {
+        return $this->manager;
+    }
+
     /**
      * Pings the server to establish a connection.
      */
     public function ping()
     {
-        // Nothing to do here.
+        $command = new Command(['ping' => 1]);
+
+        $this->manager->executeCommand('admin', $command);
     }
 }
