@@ -1,0 +1,34 @@
+<h1>AJAX Requests</h1>
+
+<h2>Relational Databases</h2>
+
+<p>
+I suggest we allow the user to open multiple databases at the same time. Each connection will get an id. When accessing
+one of the following API's, you can specify the connection id as follow:
+<pre>/relational/databases?connection=id</pre>
+</p>
+
+<p><pre>
+GET /relational/character-sets
+GET /relational/checksum
+GET /relational/collations
+GET /relational/engines
+
+GET /mysql/databases
+POST /relational/database
+GET /relational/database/:name
+PATCH /relational/database/:name
+DELETE /relational/database/:name
+
+GET /relational/schemas/:database
+POST /relational/schema/:database
+GET /relational/schema/:name/:database
+PATCH /relational/schema/:name/:database
+DELETE /relational/schema/:name/:database
+
+GET /relational/tables/:database[/:schema]
+POST /relational/table/:database[/:schema]
+GET /relational/table/:name/:database[/:schema]
+PATCH /relational/table/:name/:database[/:schema]
+DELETE /relational/table/:name/:database[/:schema]
+</pre></p>

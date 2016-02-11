@@ -23,6 +23,11 @@ class Schema
         ];
     }
 
+    public function dropSchema($schemaName)
+    {
+        return $this->metaData->dropSchema($schemaName);
+    }
+
     public function getSchemaData($schemaName)
     {
         /* @var $data SchemaObject */

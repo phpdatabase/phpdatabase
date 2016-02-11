@@ -6,6 +6,10 @@ use PhpDatabaseSchema\Metadata\MetadataInterface;
 
 interface RelationalMetadataInterface extends MetadataInterface
 {
+    public function dropSchema($schemaName);
+
+    public function dropTable($tableName, $schemaName);
+
     public function getCharacterSets();
 
     public function getCollations();
@@ -31,4 +35,6 @@ interface RelationalMetadataInterface extends MetadataInterface
     public function getView($viewName, $schemaName);
 
     public function getViews($schemaName);
+
+    public function truncateTable($tableName, $schemaName);
 }

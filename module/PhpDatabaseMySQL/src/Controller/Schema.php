@@ -20,6 +20,16 @@ class Schema extends AbstractActionController
         $this->schemaTaskService = $schemaTaskService;
     }
 
+    public function dropAction()
+    {
+        $schemaName = $this->params('schema');
+        $data = $this->schemaTaskService->dropSchema($schemaName);
+
+        return new JsonModel([
+            'data' => $data,
+        ]);
+    }
+
     public function schemaAction()
     {
         $schemaName = $this->params('schema');

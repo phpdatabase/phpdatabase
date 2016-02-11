@@ -20,6 +20,20 @@ class MySQLMetadata implements RelationalMetadataInterface
         $this->pdo = $pdo;
     }
 
+    public function dropSchema($schemaName)
+    {
+        $statement = $this->pdo->prepare(sprintf("DROP DATABASE %s", $schemaName));
+
+        return $statement->execute();
+    }
+
+    public function dropTable($tableName, $schemaName)
+    {
+        $statement = $this->pdo->prepare(sprintf("DROP TABLE %s.%s", $schemaName, $tableName));
+
+        return $statement->execute();
+    }
+
     public function getSchema($schemaName)
     {
         $sql = "
@@ -225,6 +239,13 @@ class MySQLMetadata implements RelationalMetadataInterface
     public function getViews($schemaName)
     {
         return [];
+    }
+
+    public function truncateTable($tableName, $schemaName)
+    {
+        $statement = $this->pdo->prepare(sprintf("TRUNCATE TABLE %s.%s", $schemaName, $tableName));
+
+        return $statement->execute();
     }
 
     private function parsePermittedValues($input)

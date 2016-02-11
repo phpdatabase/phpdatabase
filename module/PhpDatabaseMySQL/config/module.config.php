@@ -51,6 +51,26 @@ return [
                             ],
                         ],
                     ],
+                    'drop-schema' => [
+                        'type' => 'Zend\\Mvc\\Router\\Http\\Segment',
+                        'options' => [
+                            'route' => '/drop-schema/:schema',
+                            'defaults' => [
+                                'controller' => 'mysql-schema',
+                                'action' => 'drop',
+                            ],
+                        ],
+                    ],
+                    'drop-table' => [
+                        'type' => 'Zend\\Mvc\\Router\\Http\\Segment',
+                        'options' => [
+                            'route' => '/drop-table/:schema/:table',
+                            'defaults' => [
+                                'controller' => 'mysql-table',
+                                'action' => 'drop',
+                            ],
+                        ],
+                    ],
                     'engines' => [
                         'type' => 'Zend\\Mvc\\Router\\Http\\Literal',
                         'options' => [
@@ -91,26 +111,6 @@ return [
                             ],
                         ],
                     ],
-                    'table-drop' => [
-                        'type' => 'Zend\\Mvc\\Router\\Http\\Segment',
-                        'options' => [
-                            'route' => '/table-drop/:schema/:table',
-                            'defaults' => [
-                                'controller' => 'mysql-table',
-                                'action' => 'drop',
-                            ],
-                        ],
-                    ],
-                    'table-empty' => [
-                        'type' => 'Zend\\Mvc\\Router\\Http\\Segment',
-                        'options' => [
-                            'route' => '/table-empty/:schema/:table',
-                            'defaults' => [
-                                'controller' => 'mysql-table',
-                                'action' => 'empty',
-                            ],
-                        ],
-                    ],
                     'tables' => [
                         'type' => 'Zend\\Mvc\\Router\\Http\\Segment',
                         'options' => [
@@ -118,6 +118,16 @@ return [
                             'defaults' => [
                                 'controller' => 'mysql-table',
                                 'action' => 'tables',
+                            ],
+                        ],
+                    ],
+                    'truncate-table' => [
+                        'type' => 'Zend\\Mvc\\Router\\Http\\Segment',
+                        'options' => [
+                            'route' => '/truncate-table/:schema/:table',
+                            'defaults' => [
+                                'controller' => 'mysql-table',
+                                'action' => 'empty',
                             ],
                         ],
                     ],

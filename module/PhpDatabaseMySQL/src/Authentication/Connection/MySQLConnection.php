@@ -42,18 +42,4 @@ class MySQLConnection extends PDO implements ConnectionInterface
     {
         // Nothing to do here.
     }
-
-    public function dropTable($tableName, $schemaName)
-    {
-        $statement = sprintf("DROP TABLE %s.%s", $tableName, $schemaName);
-
-        return $this->exec($statement);
-    }
-
-    public function emptyTable($tableName, $schemaName)
-    {
-        $statement = sprintf("TRUNCATE TABLE %s.%s", $tableName, $schemaName);
-
-        return $this->exec($statement);
-    }
 }
