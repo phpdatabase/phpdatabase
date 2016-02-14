@@ -1,34 +1,156 @@
 <h1>AJAX Requests</h1>
 
-<h2>Relational Databases</h2>
+<h2>Connections</h2>
 
 <p>
-I suggest we allow the user to open multiple databases at the same time. Each connection will get an id. When accessing
-one of the following API's, you can specify the connection id as follow:
-<pre>/relational/databases?connection=id</pre>
+    To allow the user to open multiple databases at the same time. Each connection will get an id. When accessing
+    one of the following API's, you can specify the connection id as follow:
+    <pre>/api/mongodb/databases?connection=id</pre>
 </p>
 
-<p><pre>
-GET /relational/character-sets
-GET /relational/checksum
-GET /relational/collations
-GET /relational/engines
+<h2>MongoDB</h2>
 
-GET /mysql/databases
-POST /relational/database
-GET /relational/database/:name
-PATCH /relational/database/:name
-DELETE /relational/database/:name
+<h3>Information</h3>
 
-GET /relational/schemas/:database
-POST /relational/schema/:database
-GET /relational/schema/:name/:database
-PATCH /relational/schema/:name/:database
-DELETE /relational/schema/:name/:database
+<ul>
+    <li>
+        <h3>Get information about MongoDB</h3>
+        <p><pre>GET /api/mongodb/build-info</pre></p>
+    </li>
+    <li>
+        <h3>Get available commands</h3>
+        <p><pre>GET /api/mongodb/commands</pre></p>
+    </li>
+</ul>
 
-GET /relational/tables/:database[/:schema]
-POST /relational/table/:database[/:schema]
-GET /relational/table/:name/:database[/:schema]
-PATCH /relational/table/:name/:database[/:schema]
-DELETE /relational/table/:name/:database[/:schema]
-</pre></p>
+<h3>Databases</h3>
+
+<ul>
+    <li>
+        <h3>Get all databases</h3>
+        <p><pre>GET /api/mongodb/database</pre></p>
+    </li>
+    <li>
+        <h3>Create a database</h3>
+        <p><pre>POST /api/mongodb/database</pre></p>
+        <p><pre>{
+    "databaseName": "..."
+}</pre></p>
+    </li>
+    <li>
+        <h3>Delete a database</h3>
+        <p><pre>DELETE /api/mongodb/database</pre></p>
+        <p><pre>{
+    "databaseName": "..."
+}</pre></p>
+    </li>
+</ul>
+
+
+<h3>Collections</h3>
+
+<ul>
+    <li>
+        <h3>Get all collections within a database</h3>
+        <p><pre>GET /api/mongodb/collection?databaseName=...</pre></p>
+    </li>
+    <li>
+        <h3>Get the content of a collection within a database</h3>
+        <p><pre>GET /api/mongodb/collection?databaseName=...&collectionName=...</pre></p>
+        <ul>
+           <li>You can specify the <pre>offset</pre> parameter to skip documents.</li>
+           <li>You can specify the <pre>limit</pre> parameter to set the amount of documents to retrieve.</li>
+        </ul>
+    </li>
+    <li>
+        <h3>Create a collection within a database</h3>
+        <p><pre>POST /api/mongodb/collection</pre></p>
+        <p><pre>{
+    "databaseName": "...",
+    "collectionName": "..."
+}</pre></p>
+    </li>
+    <li>
+        <h3>Deletes a collection from a database</h3>
+        <p><pre>DELETE /api/mongodb/collection</pre></p>
+        <p><pre>{
+    "databaseName": "...",
+    "collectionName": "..."
+}</pre></p>
+    </li>
+</ul>
+
+<h2>MySQL</h2>
+
+<h3>Information</h3>
+
+<ul>
+    <li>
+        <h3>Get available character sets</h3>
+        <p><pre>GET /api/mysql/character-sets</pre></p>
+    </li>
+    <li>
+        <h3>Get available checksums</h3>
+        <p><pre>GET /api/mysql/checksum</pre></p>
+    </li>
+    <li>
+        <h3>Get available collations</h3>
+        <p><pre>GET /api/mysql/collations</pre></p>
+    </li>
+    <li>
+        <h3>Get available engines</h3>
+        <p><pre>GET /api/mysql/engines</pre></p>
+    </li>
+</ul>
+
+<h3>Databases</h3>
+
+<ul>
+    <li>
+        <h3>Get all databases</h3>
+        <p><pre>GET /api/mysql/database</pre></p>
+    </li>
+    <li>
+        <h3>Create a database</h3>
+        <p><pre>POST /api/mysql/database</pre></p>
+        <p><pre>{
+    "databaseName": "..."
+}</pre></p>
+    </li>
+    <li>
+        <h3>Delete a database</h3>
+        <p><pre>DELETE /api/mysql/database</pre></p>
+        <p><pre>{
+    "databaseName": "..."
+}</pre></p>
+    </li>
+</ul>
+
+<h3>Tables</h3>
+
+<ul>
+    <li>
+        <h3>Get all tables within a database</h3>
+        <p><pre>GET /api/mysql/table?databaseName=...</pre></p>
+    </li>
+    <li>
+        <h3>Create a table</h3>
+        <p><pre>POST /api/mysql/table</pre></p>
+        <p><pre>{
+    "databaseName": "...",
+    "tableName": "...",
+    "columns": [
+    ],
+    "indexes": [
+    ]
+}</pre></p>
+    </li>
+    <li>
+        <h3>Delete a table</h3>
+        <p><pre>DELETE /api/mysql/table</pre></p>
+        <p><pre>{
+    "databaseName": "...",
+    "tableName": "..."
+}</pre></p>
+    </li>
+</ul>

@@ -59,33 +59,23 @@ return [
                                     ],
                                 ],
                             ],
-                            'collections' => [
+                            'collection' => [
                                 'type' => 'Zend\\Mvc\\Router\\Http\\Literal',
                                 'options' => [
-                                    'route' => '/collections',
+                                    'route' => '/collection',
                                     'defaults' => [
                                         'controller' => 'mongo-api',
-                                        'action' => 'collections',
+                                        'action' => 'collection',
                                     ],
                                 ],
                             ],
-                            'databases' => [
+                            'database' => [
                                 'type' => 'Zend\\Mvc\\Router\\Http\\Literal',
                                 'options' => [
-                                    'route' => '/databases',
+                                    'route' => '/database',
                                     'defaults' => [
                                         'controller' => 'mongo-api',
-                                        'action' => 'databases',
-                                    ],
-                                ],
-                            ],
-                            'servers' => [
-                                'type' => 'Zend\\Mvc\\Router\\Http\\Literal',
-                                'options' => [
-                                    'route' => '/servers',
-                                    'defaults' => [
-                                        'controller' => 'mongo-api',
-                                        'action' => 'servers',
+                                        'action' => 'database',
                                     ],
                                 ],
                             ],

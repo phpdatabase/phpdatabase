@@ -3,12 +3,11 @@
 namespace PhpDatabaseMongoDB\Controller;
 
 use Exception;
-use InvalidArgumentException;
-use LogicException;
 use PhpDatabaseApplication\Exception\Api\ApiExceptionInterface;
 use PhpDatabaseApplication\Exception\Api\MethodNotAllowed;
 use PhpDatabaseMongoDB\TaskService\Api as ApiTaskService;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Paginator\Paginator;
 use Zend\View\Model\JsonModel;
 
 class Api extends AbstractActionController
@@ -27,13 +26,8 @@ class Api extends AbstractActionController
 
     public function buildInfoAction()
     {
-        $databaseName = $this->params()->fromQuery('database');
-        if (!$databaseName) {
-            throw new InvalidArgumentException('Missing the "database" query parameter.');
-        }
-
         return new JsonModel([
-            'data' => $this->apiTaskService->getBuildInfo($databaseName),
+            'data' => $this->apiTaskService->getBuildInfo(),
         ]);
     }
 
@@ -44,43 +38,77 @@ class Api extends AbstractActionController
         ]);
     }
 
-    public function collectionsAction()
+    public function collectionAction()
     {
-        $databaseName = $this->params()->fromQuery('database');
-        if (!$databaseName) {
-            throw new InvalidArgumentException('Missing the "database" query parameter.');
-        }
+        $paginator = null;
 
-        return new JsonModel([
-            'data' => $this->apiTaskService->getCollections($databaseName),
-        ]);
-    }
-
-    public function databasesAction()
-    {
         try {
             switch (strtoupper($this->getRequest()->getMethod())) {
-                case 'POST':
-                    $data = $this->apiTaskService->createDatabase($this->params()->fromPost('name'));
+                case 'DELETE':
+                    $json = json_decode($this->getRequest()->getContent(), true);
+                    $data = $this->apiTaskService->dropCollection($json['databaseName'], $json['collectionName']);
                     break;
 
                 case 'GET':
-                    $data = $this->apiTaskService->getDatabases();
+                    $databaseName = $this->params()->fromQuery('databaseName');
+                    $collectionName = $this->params()->fromQuery('collectionName');
+
+                    if ($collectionName) {
+                        $paginator = $this->apiTaskService->getCollection($databaseName, $collectionName);
+                        $data = $this->convertPaginatorToArray($paginator);
+                    } else {
+                        $data = $this->apiTaskService->getCollections($databaseName);
+                    }
+                    break;
+
+                case 'POST':
+                    $json = json_decode($this->getRequest()->getContent(), true);
+                    $data = $this->apiTaskService->createCollection($json['databaseName'], $json['collectionName']);
                     break;
 
                 default:
                     throw new MethodNotAllowed();
             }
         } catch (Exception $e) {
-            if ($e instanceof ApiExceptionInterface) {
-                $this->getResponse()->setStatusCode($e->getCode());
-            }
+            $data = $this->handleException($e);
+        }
 
-            $data = [
-                'error' => get_class($e),
-                'code' => $e->getCode(),
-                'message' => $e->getMessage(),
-            ];
+        $result = [
+            'data' => $data,
+        ];
+
+        if ($paginator) {
+            $result = [
+                'total' => $paginator->getTotalItemCount(),
+            ] + $result;
+        }
+
+        return new JsonModel($result);
+    }
+
+    public function databaseAction()
+    {
+        try {
+            switch (strtoupper($this->getRequest()->getMethod())) {
+                case 'DELETE':
+                    $json = json_decode($this->getRequest()->getContent(), true);
+                    $data = $this->apiTaskService->dropDatabase($json['databaseName']);
+                    break;
+
+                case 'GET':
+                    $data = $this->apiTaskService->getDatabases();
+                    break;
+
+                case 'POST':
+                    $json = json_decode($this->getRequest()->getContent(), true);
+                    $data = $this->apiTaskService->createDatabase($json['databaseName']);
+                    break;
+
+                default:
+                    throw new MethodNotAllowed();
+            }
+        } catch (Exception $e) {
+            $data = $this->handleException($e);
         }
 
         return new JsonModel([
@@ -88,10 +116,30 @@ class Api extends AbstractActionController
         ]);
     }
 
-    public function serversAction()
+    private function convertPaginatorToArray(Paginator $paginator)
     {
-        return new JsonModel([
-            'data' => $this->apiTaskService->getServers(),
-        ]);
+        $paginator->setItemCountPerPage(max(1, (int)$this->params()->fromQuery('limit', 25)));
+        $paginator->setCurrentPageNumber(max(1, (int)$this->params()->fromQuery('page', 1)));
+
+        $data = [];
+
+        foreach ($paginator as $item) {
+            $data[] = $item;
+        }
+
+        return $data;
+    }
+
+    private function handleException(Exception $e)
+    {
+        if ($e instanceof ApiExceptionInterface) {
+            $this->getResponse()->setStatusCode($e->getCode());
+        }
+
+        return [
+            'error' => get_class($e),
+            'code' => $e->getCode(),
+            'message' => $e->getMessage(),
+        ];
     }
 }

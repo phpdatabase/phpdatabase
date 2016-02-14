@@ -2,7 +2,6 @@
 
 namespace PhpDatabaseMongoDB\TaskService;
 
-use InvalidArgumentException;
 use PhpDatabaseApplication\Exception\Api\PreconditionFailed;
 use PhpDatabaseMongoDB\Metadata\MongoDBMetadata;
 
@@ -15,9 +14,57 @@ class Api
         $this->metaData = $metaData;
     }
 
-    public function getBuildInfo($databaseName)
+    public function createCollection($databaseName, $collectionName)
     {
-        return $this->metaData->getBuildInfo($databaseName);
+        if (!$databaseName) {
+            throw new PreconditionFailed('Missing the name of database to create the collection in.');
+        }
+
+        if (!$collectionName) {
+            throw new PreconditionFailed('Missing the name of collection to create.');
+        }
+
+        return $this->metaData->createCollection($databaseName, $collectionName);
+    }
+
+    public function createDatabase($name)
+    {
+        if (!$name) {
+            throw new PreconditionFailed('Missing the name of database to create.');
+        }
+
+        return [
+            'success' => $this->metaData->createDatabase($name)
+        ];
+    }
+
+    public function dropCollection($databaseName, $collectionName)
+    {
+        if (!$databaseName) {
+            throw new PreconditionFailed('Missing the name of database to drop the collection in.');
+        }
+
+        if (!$collectionName) {
+            throw new PreconditionFailed('Missing the name of collection to drop.');
+        }
+
+        return $this->metaData->dropCollection($databaseName, $collectionName);
+    }
+
+    public function dropDatabase($name)
+    {
+        if (!$name) {
+            throw new PreconditionFailed('Missing the name of database to be dropped.');
+        }
+
+        return [
+            'success' => $this->metaData->dropDatabase($name)
+        ];
+    }
+
+    public function getBuildInfo()
+    {
+        return $this->metaData->getBuildInfo();
     }
 
     public function getCommands()
@@ -25,26 +72,18 @@ class Api
         return $this->metaData->getCommands();
     }
 
-    public function getCollections($databaseName)
+    public function getCollection($databaseName, $collectionName)
     {
-        $data = [];
-        foreach ($this->metaData->getCollections($databaseName) as $collection) {
-            $data[] = [
-                'name' => $collection,
-            ];
-        }
-        return $data;
+        return $this->metaData->getCollectionPaginator($databaseName, $collectionName);
     }
 
-    public function createDatabase($name)
+    public function getCollections($databaseName)
     {
-        if (!$name) {
-            throw new PreconditionFailed('Missing the name of database to created.');
+        if (!$databaseName) {
+            throw new PreconditionFailed('Missing the "database" query parameter.');
         }
 
-        return [
-            'success' => $this->metaData->createDatabase($name)
-        ];
+        return $this->metaData->getCollections($databaseName);
     }
 
     public function getDatabases()
@@ -56,14 +95,6 @@ class Api
                 'sizeOnDisk' => $database->getSizeOnDisk(),
                 'empty' => $database->getEmpty(),
             ];
-        }
-        return $data;
-    }
-
-    public function getServers()
-    {
-        $data = [];
-        foreach ($this->metaData->getServers() as $server) {
         }
         return $data;
     }
