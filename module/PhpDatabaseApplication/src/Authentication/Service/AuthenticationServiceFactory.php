@@ -4,6 +4,7 @@ namespace PhpDatabaseApplication\Authentication\Service;
 
 use PhpDatabaseApplication\Authentication\Adapter\AuthenticationAdapter;
 use PhpDatabaseApplication\Authentication\AuthenticationService;
+use Zend\Authentication\Storage\NonPersistent;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -15,10 +16,8 @@ class AuthenticationServiceFactory implements FactoryInterface
         $connectionManager = $serviceLocator->get('application.authentication.connectionpluginmanager');
 
         $adapter = new AuthenticationAdapter($connectionManager, $config['phpdatabase']['profiles']);
+        $storage = new NonPersistent();
 
-        $authenticationService = new AuthenticationService(null, $adapter);
-        $authenticationService->setConnectionManager($connectionManager);
-
-        return $authenticationService;
+        return new AuthenticationService($storage, $adapter, $serviceLocator->get('authentication'));
     }
 }

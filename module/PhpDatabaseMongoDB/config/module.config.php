@@ -14,7 +14,7 @@ return [
     ],
     'phpdatabase_connection_manager' => [
         'invokables' => [
-            'mongo' => MongoDBConnection::class,
+            'mongodb' => MongoDBConnection::class,
         ],
     ],
     'router' => [

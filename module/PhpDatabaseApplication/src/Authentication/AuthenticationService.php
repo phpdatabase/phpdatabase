@@ -2,32 +2,84 @@
 
 namespace PhpDatabaseApplication\Authentication;
 
-use PhpDatabaseApplication\Authentication\Service\ConnectionPluginManager;
-use RuntimeException;
+use ArrayObject;
+use Zend\Authentication\Adapter\AdapterInterface;
 use Zend\Authentication\AuthenticationService as BaseAuthenticationService;
+use Zend\Authentication\Storage\StorageInterface;
+use Zend\Session\Container;
 
 class AuthenticationService extends BaseAuthenticationService
 {
-    private $connectionManager;
-    private $connection;
+    private $container;
 
-    public function setConnectionManager(ConnectionPluginManager $connectionManager)
+    public function __construct(StorageInterface $storage, AdapterInterface $adapter, Container $container)
     {
-        $this->connectionManager = $connectionManager;
+        parent::__construct($storage, $adapter);
+
+        $this->container = $container;
+
+        if (!$this->container->profiles) {
+            $this->container->profiles = new ArrayObject();
+        }
     }
 
-    public function getConnection()
+    public function getIdentity()
     {
-        if (!$this->connection) {
-            $identity = $this->getIdentity();
-
-            if (!$this->connectionManager->has($identity['platform'])) {
-                throw new RuntimeException(sprintf('There is no connection registered for platform "%s".', $identity['platform']));
-            }
-
-            $this->connection = $this->connectionManager->get($identity['platform'], $identity);
+        if (!$this->hasIdentity()) {
+            return null;
         }
 
-        return $this->connection;;
+        $identity = new Identity();
+
+        foreach ($this->container->profiles as $data) {
+            $identity->addProfile(new Profile(
+                $data['name'],
+                $data['display_name'],
+                $data['platform'],
+                $data['hostname'],
+                $data['port'],
+                $data['username'],
+                $data['password']
+            ));
+        }
+
+        return $identity;
+    }
+
+    public function clearConnection($index)
+    {
+        if (array_key_exists($index, $this->container->profiles)) {
+            unset($this->container->profiles[$index]);
+        }
+    }
+
+    public function clearIdentity()
+    {
+        $result = parent::clearIdentity();
+
+        $this->container->profiles = [];
+
+        return $result;
+    }
+
+    public function hasIdentity()
+    {
+        return count($this->container->profiles) !== 0;
+    }
+
+    public function authenticate(AdapterInterface $adapter = null)
+    {
+        $profiles = $this->container->profiles;
+
+        $result = parent::authenticate($adapter);
+
+        if ($result->isValid()) {
+            $this->getStorage()->write(true);
+
+            $this->container->profiles = $profiles;
+            $this->container->profiles[] = $result->getIdentity();
+        }
+
+        return $result;
     }
 }

@@ -8,6 +8,17 @@
     <pre>/api/mongodb/databases?connection=id</pre>
 </p>
 
+<p>Current identity:</p>
+<?php var_dump($this->identity()); ?>
+
+<p>Current connections:</p>
+
+<ul>
+    <?php foreach ($this->identity()->getProfiles() as $profile) { ?>
+    <li><?php var_dump($profile); ?></li>
+    <?php } ?>
+</ul>
+
 <h2>MongoDB</h2>
 
 <h3>Information</h3>
@@ -15,11 +26,11 @@
 <ul>
     <li>
         <h3>Get information about MongoDB</h3>
-        <p><pre>GET /api/mongodb/build-info</pre></p>
+        <p><pre>GET /api/mongodb/build-info?connection=&lt;name&gt;</pre></p>
     </li>
     <li>
         <h3>Get available commands</h3>
-        <p><pre>GET /api/mongodb/commands</pre></p>
+        <p><pre>GET /api/mongodb/commands?connection=&lt;name&gt;</pre></p>
     </li>
 </ul>
 
@@ -28,18 +39,18 @@
 <ul>
     <li>
         <h3>Get all databases</h3>
-        <p><pre>GET /api/mongodb/database</pre></p>
+        <p><pre>GET /api/mongodb/database?connection=&lt;name&gt;</pre></p>
     </li>
     <li>
         <h3>Create a database</h3>
-        <p><pre>POST /api/mongodb/database</pre></p>
+        <p><pre>POST /api/mongodb/database?connection=&lt;name&gt;</pre></p>
         <p><pre>{
     "databaseName": "..."
 }</pre></p>
     </li>
     <li>
         <h3>Delete a database</h3>
-        <p><pre>DELETE /api/mongodb/database</pre></p>
+        <p><pre>DELETE /api/mongodb/database?connection=&lt;name&gt;</pre></p>
         <p><pre>{
     "databaseName": "..."
 }</pre></p>

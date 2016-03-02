@@ -67,9 +67,35 @@ return [
         ],
     ],
     'service_manager' => [
+        'abstract_factories' => [
+            'Zend\\Session\\Service\\ContainerAbstractServiceFactory',
+        ],
+        'aliases' => [
+            'Zend\\Authentication\\AuthenticationService' => 'application.authentication.service',
+        ],
         'factories' => [
             'application.authentication.service' => AuthenticationServiceFactory::class,
+            'Zend\\Session\\Config\\ConfigInterface' => 'Zend\\Session\\Service\\SessionConfigFactory',
+            'Zend\\Session\\ManagerInterface' => 'Zend\\Session\\Service\\SessionManagerFactory',
+            'Zend\\Session\\Storage\\StorageInterface' => 'Zend\Session\Service\\StorageFactory',
         ],
+    ],
+    'session_containers' => [
+        'authentication',
+    ],
+    'session_config' => [
+        'name' => 'phpdatabase',
+        'rememberMeSeconds' => 3600,
+    ],
+    'session_manager' => [
+        'validators' => [
+            'Zend\Session\Validator\RemoteAddr',
+            'Zend\Session\Validator\HttpUserAgent',
+        ],
+    ],
+    'session_storage' => [
+        'type' => 'Zend\\Session\\Storage\\SessionArrayStorage',
+        'options' => [],
     ],
     'translator' => [
         'locale' => 'en_GB',

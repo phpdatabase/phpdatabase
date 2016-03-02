@@ -3,7 +3,6 @@
 namespace PhpDatabaseApplication\Authentication\Adapter;
 
 use Exception;
-use PDO;
 use PhpDatabaseApplication\Authentication\Service\ConnectionPluginManager;
 use RuntimeException;
 use Zend\Authentication\Adapter\AbstractAdapter;
@@ -79,12 +78,10 @@ class AuthenticationAdapter extends AbstractAdapter
 
     private function buildIdentity($profile)
     {
-        return [
-            'platform' => $profile['platform'],
-            'hostname' => $profile['hostname'],
-            'port' => $profile['port'],
+        return $profile + [
             'username' => $this->getIdentity(),
             'password' => $this->getCredential(),
+            'name' => $this->profile,
         ];
     }
 

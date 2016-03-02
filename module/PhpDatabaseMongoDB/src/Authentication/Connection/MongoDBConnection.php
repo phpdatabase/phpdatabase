@@ -55,9 +55,6 @@ class MongoDBConnection implements ConnectionInterface
      */
     public function ping()
     {
-        $command = new Command(['ping' => 1]);
-
-        $this->client->
-        $this->client->executeCommand('admin', $command);
+        $this->client->selectDatabase('admin')->command(['ping' => 1]);
     }
 }

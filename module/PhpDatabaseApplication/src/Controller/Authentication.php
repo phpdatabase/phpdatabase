@@ -35,7 +35,13 @@ class Authentication extends AbstractActionController
 
     public function logoutAction()
     {
-        $this->authenticationService->clearIdentity();
+        $connection = $this->params()->fromQuery('connection', null);
+
+        if ($connection === null) {
+            $this->authenticationService->clearIdentity();
+        } else {
+            $this->authenticationService->clearConnection($connection);
+        }
 
         return $this->redirect()->toRoute('login');
     }
